@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>homework</title>
+</head>
+
+<style>
+    body{
+        background-color: rgb(245, 245, 126);
+    }
+
+    #OrangeBox{
+        position: absolute;
+        top:25%;
+        width: 100%;
+        height: 50%;
+        background-color: rgb(246, 184, 69);
+    }
+
+    .PinkBox{
+        position: absolute;
+        top: 25%;
+        left: 25%;
+        width:50%;
+        height: 50%;
+        background-color: pink;
+    }
+
+    h1{
+        cursor: cell;
+        position: relative;
+        text-align:center;
+        top:25%;
+    }
+
+    h2{
+        cursor: cell;
+        position: relative;
+        text-align: center;
+        top: 25%;
+    }
+
+</style>
+
+<body>
+    <div id="OrangeBox">
+        <div class="PinkBox">
+            <h1 onclick="MyHello()">CLICK HERE</h1>
+        </div>
+    </div>
+</body>
+ 
+<script>
+    function MyHello(){
+        alert('Hello there');
+        console.log('the div was clicked');
+    }
+    
+</script>
+</html>
