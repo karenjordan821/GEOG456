@@ -21,13 +21,13 @@ crossorigin=""></script>
 <body>
     <div id="map"></div>  
     <script>
-        var map = L.map('map').setView([35.907961625589316, -79.04517173767091], 18);
+        var map = L.map('map').setView([35.119908570996834, -75.91552734375001], 10);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
-    var marker = L.marker([35.907961625589316, -79.04517173767091]).addTo(map);
-    marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    var marker = L.marker([35.1255247934279, -75.91140747070314]).addTo(map);
+    marker.bindPopup("<b>Ocracoke Island, NC</b><br>Ocracoke Island is part of the Outer Banks and is my hometown. It has a population a little over 900, with many of the locals speaking with the 'Ococker' accent. Copy the link to learn more: https://www.youtube.com/watch?v=x7MvtQp2-UA.").openPopup();
 
     </script>
 
