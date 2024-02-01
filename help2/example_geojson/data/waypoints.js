@@ -1,8 +1,4 @@
-// This was originally a geoJSON
-// I added the words 'var waypoints = '  
-// and change the .geoJSON file name extension to .js
-// Now the geoJSON should behave like a js variable
-var waypoints = {
+{
 "type": "FeatureCollection",
 "name": "waypoints",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
