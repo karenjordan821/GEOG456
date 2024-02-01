@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jan31</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+
+    <style>
+        #map { height: 400px; }
+    </style>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+crossorigin=""></script>
+
+</head>
+
+<body>
+    <div id="map"></div>
+    
+    <script>
+        var map = L.map('map').setView([43.089952, 12.395325], 13);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+         maxZoom: 13,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        var perugia = [43.089952, 12.395325]
+
+        var marker = L.circleMarker(perugia).addTo(map);
+
+        marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+
+        function onMapClick(e) {
+         alert("You clicked the map at " + e.latlng);
+        }
+
+        map.on('click', onMapClick);
+    </script>
+
+</body>
+</html>
