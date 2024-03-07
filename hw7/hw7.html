@@ -20,6 +20,8 @@ crossorigin=""></script>
 </style>
 
 <body>
+    <h1>Hurricane Arlene</h1>
+    <h2>The map below shows the path of Hurricane Arlene. Each marker represents a recording of its movement.</h2>
     <h3 id = "theDate">Date</h3>
     <input id="dateSlider" type = "range" name = "Date" min = "0" max = "15" value = "0" oninput="moveSlider(this.value)">
     <div id="map"></div>
@@ -58,7 +60,7 @@ crossorigin=""></script>
         function moveSlider(value) { // function called by the slider that uses the value to select one feature, using the index of the feature array. 
             console.log(value)
             //map.removeLayer(marker);// leaflet method to remove a layer
-            document.getElementById('theDate').innerHTML = 'Date ' + arlene.features[value].properties.Date
+            document.getElementById('theDate').innerHTML = 'Date: ' + arlene.features[value].properties.Date + '/1987'
             var marker = L.marker([arlene.features[value].properties["Latitude"],arlene.features[value].properties["Longitude"]]).addTo(map)
             // above, line selecting div and assigning value
         //    geojson = L.geoJson(arlene.features[value],{
