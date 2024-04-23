@@ -16,28 +16,27 @@
             font-family: Arial, sans-serif;}
 
  .container {
-width: 80%; /* Adjust the width as needed */
-margin: 0 auto; /* This will center the container horizontally */
-text-align: center; /* This will center the content inside the container */
+width: 80%; 
+margin: 0 auto; 
+text-align: center; 
 }
 
 .map-container {
     display: flex;
-    justify-content: space-around; /* Adjust as needed */
-    margin-top: 20px; /* Adjust as needed */
+    justify-content: space-around; 
+    margin-top: 20px; 
 }
 
 .map {
     flex: 1;
-    height: 400px; /* Adjust the height as needed */
+    height: 400px; 
 }
 .legend {
-    /* Adjust legend styles as needed */
     background-color: white;
     border: 1px solid #ccc;
     padding: 10px;
-    max-width: 200px; /* Adjust as needed */
-    margin-top: 10px; /* Adjust as needed */
+    max-width: 200px; 
+    margin-top: 10px; 
 }
 .legend-item { margin-bottom: 5px; }
 .legend-color { width: 20px; height: 20px; display: inline-block; }
@@ -74,7 +73,6 @@ text-align: center; /* This will center the content inside the container */
 </head>
 <body>
     <div class="container">
-        <!-- All your website content goes here -->
         <img src="data/foodbank.png" alt="Food Bank Image">
         <h1>Eastern NC Natural Disaster Food Relief</h1>
         <p>In Eastern North Carolina, hurricanes, tropical storms, and severe flooding are often catastrophic, recurring threats. These
@@ -95,7 +93,6 @@ text-align: center; /* This will center the content inside the container */
         <div class="map-container">
             <div id="mapBi" class="map"></div>
             <div id="legendBi" class="legend">
-                <!-- Legend content for bi map -->
                 <!-- <div class="legend-item"><span class="legend-color" style="background-color: white"></span> 1 severe storm event, 1-14.1% food insecurity rate </div> -->
                 <div class="legend-item"><span class="legend-color" style="background-color: #d9aeca"></span> 1 severe storm event, 14.2-21.1% food insecurity rate </div>
                 <div class="legend-item"><span class="legend-color" style="background-color: #c974ad"></span> 1 severe storm event, 21.2-28% food insecurity rate </div>
@@ -111,7 +108,6 @@ text-align: center; /* This will center the content inside the container */
         <!-- Donation form -->
         <h2>Donate Now!</h2>
         <form id="donationForm" action="/donate" method="POST">
-            <!-- Donation form fields -->
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>
         
@@ -128,7 +124,6 @@ text-align: center; /* This will center the content inside the container */
                     <option value="20">$20</option>
                     <option value="50">$50</option>
                     <option value="100">$100</option>
-                    <!-- You can add more options as needed -->
                 </select>
                 <input type="submit" value="Donate">
 
@@ -144,6 +139,7 @@ text-align: center; /* This will center the content inside the container */
         mapBi.doubleClickZoom.disable();
         mapBi.boxZoom.disable();
         mapBi.keyboard.disable();
+   
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19
         }).addTo(mapBi);
@@ -152,7 +148,6 @@ text-align: center; /* This will center the content inside the container */
         var foodYear = 'A2009'
 
         function myStyle(feature) {
-            // Define your styling logic here
             var valueStorms = feature.properties[stormsYear];
             var valueFood = feature.properties[foodYear];
 
@@ -210,12 +205,11 @@ text-align: center; /* This will center the content inside the container */
             };
         }
 
-        // Add the GeoJSON layer to the map with custom styling
         L.geoJSON(combined, {
             style: myStyle,
             onEachFeature: function(feature, layer) {
                 layer.on('click', function (e) {
-            // Create a text box with the county name
+            // not sure why below isn't working
             var textBox = L.control({ position: 'topright' });
             textBox.onAdd = function (map) {
                 this._div = L.DomUtil.create('div', 'info');

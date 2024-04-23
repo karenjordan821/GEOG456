@@ -6,6 +6,16 @@
     <title>Side-by-Side</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
+        
+        body {
+            font-family: Arial, sans-serif;}
+
+        .container {
+        width: 80%; 
+        margin: 0 auto; 
+        text-align: center; 
+        }
+        
         .map-container {
             display: flex;
             width: 100%;
@@ -20,15 +30,13 @@
         .legend {
             background-color: white;
             border: 1px solid #ccc;
-            padding: 10px;
             font-size: 12px;
             line-height: 18px;
             color: #555;
             border-radius: 5px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             position: absolute;
-            bottom: 20px;
-            width: 200px; /* Adjust the width as needed */
+            width: 200px; 
         }
 
         .legend-item {
@@ -48,21 +56,17 @@
             margin-bottom: 10px;
         }
 
-        /* Adjust the position of legend for map1 */
         #legend1 {
             left: 20px;
         }
 
-        /* Adjust the position of legend for map2 */
         #legend2 {
             right: 20px;
         }
     </style>
 </head>
 <body>
-    <p id="text">I was initially going to include this map on the other page below the bivariate map, but it is not pulling the correct
-        data. I'm currently still troubleshooting the problem.</p>
-    </h3>
+    <p id="text">I was initially going to include this map on the other page below the bivariate map, but when I include it on that HTML page, it doesn't pull the correct data. </p>
     <h3 id = "theYear">Year</h3>
     <input type="range" name="year" value="2009" min="2009" max="2018" oninput="moveSlider(this.value)">
     <div class="map-container">
@@ -173,7 +177,7 @@
 
         function moveSlider(value){
             stormsSideYear = value;
-            foodSideYear = 'A' + value; // Set foodYear to the numeric value of the year
+            foodSideYear = 'A' + value; 
         if (final1) {
         map1.removeLayer(final1);
         }
