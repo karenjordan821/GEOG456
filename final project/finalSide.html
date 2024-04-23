@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Side-by-Side</title>
+    <title>Side-by-Side: Eastern NC Natural Disaster Food Relief</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+    
     <style>
         
         body {
@@ -15,16 +19,17 @@
         margin: 0 auto; 
         text-align: center; 
         }
-        
+
         .map-container {
             display: flex;
             width: 100%;
+            margin-top: 20px;
         }
 
         .map {
             flex: 1;
             height: 200px;
-            width: 500px;
+            width: 400px;
         }
 
         .legend {
@@ -35,7 +40,6 @@
             color: #555;
             border-radius: 5px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            position: absolute;
             width: 200px; 
         }
 
@@ -61,13 +65,54 @@
         }
 
         #legend2 {
-            right: 20px;
+            left: 40px;
+        }
+
+        .donation-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="email"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <p id="text">I was initially going to include this map on the other page below the bivariate map, but when I include it on that HTML page, it doesn't pull the correct data. </p>
-    <h3 id = "theYear">Year</h3>
+    <div class="container">
+        <img src="data/foodbank.png" alt="Food Bank Image">
+        <h1>Eastern NC Natural Disaster Food Relief</h1>
+        <p>In Eastern North Carolina, hurricanes, tropical storms, and severe flooding are often catastrophic, recurring threats. These
+            counties face immense challenges, especially in securing food security for those affected. Donating money to the Food Bank of
+            Central & Eastern North Carolina to support communiies after these calamaties is not just a gesture of goodwill; it's a lifeline.</p>
+        <p>
+            The map below highlights Eastern NC counties greatly affected by severe storms and food insecurity between 2009 and 2018. Our team at the Food Bank 
+            oversees a network of disaster food relief funds and food pantries across Eastern NC and can assist in facilitating donations to support them.
+        </p>
+        <p>
+            We kindly encourage you to consider supporting the counties that have shown the greatest need, and we hope that this map aids
+            you in directing your support.
+        </p>
+    <h3 id="theSideYear">Year</h3>
     <input type="range" name="year" value="2009" min="2009" max="2018" oninput="moveSlider(this.value)">
     <div class="map-container">
         <div>
@@ -88,6 +133,29 @@
                 <div class="legend-item"><span class="legend-color" style="background-color: #c51b8a"></span> 21.2-28% food insecurity rate </div>
             </div>
         </div>
+        <p>Click <a href="finalBivariate.html">here</a> to visit the bivariate version of these maps.</p>
+    <div class ="donation-form">
+        <h2>Donate Now!</h2>
+        <form id="donationForm" action="/donate" method="POST">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+        
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="county">County:</label>
+                <input type="text" id="county" name="county">
+
+                
+                <label for="amount">Donation Amount:</label>
+                <select id="amount" name="amount" required>
+                    <option value="10">$10</option>
+                    <option value="20">$20</option>
+                    <option value="50">$50</option>
+                    <option value="100">$100</option>
+                </select>
+                <input type="submit" value="Donate">
+            </div>
     </div>
 
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -113,7 +181,7 @@
             }
             return {
                 fillColor: color,
-                weight: 2,
+                weight: 1,
                 opacity: 1,
                 color: 'black',
                 fillOpacity: 0.9
@@ -139,7 +207,7 @@
          
             return {
                 fillColor: color,
-                weight: 2,
+                weight: 1,
                 opacity: 1,
                 color: 'black',
                 fillOpacity: 0.9
@@ -186,7 +254,7 @@
          }
         final1 = L.geoJSON(combined, { style: style1 }).addTo(map1);
         final2 = L.geoJSON(combined, { style: style2 }).addTo(map2);
-        document.getElementById('theYear').innerHTML = 'Year: ' + value;
+        document.getElementById('theSideYear').innerHTML = 'Year: ' + value;
         }
     </script>
 </body>
