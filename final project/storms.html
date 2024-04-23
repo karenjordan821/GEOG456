@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storm Events</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+crossorigin=""></script>
+
+<style>
+    #map {
+        width: 100%;
+        height: 500px;}
+
+    .legend { 
+      background-color: white;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .legend-item { margin-bottom: 5px; }
+    .legend-color { width: 20px; height: 20px; display: inline-block; }
+</style>
+
+<body>
+    <h1>Severe Storm Events in Eastern NC, 2009-2018</h1>
+    <h2 id = "theYear">Year</h2>
+    <input type="range" name="year" value="2009" min="2009" max="2018" oninput="moveSlider(this.value)">
+    <div id="map"></div>
+    <div id="legend" class="legend">
+        <div class="legend-item"><span class="legend-color" style="background-color: #fee6ce"></span> 1 severe storm events per year</div>
+        <div class="legend-item"><span class="legend-color" style="background-color: #fdae6b"></span> 2-3 severe storm events per year</div>
+        <div class="legend-item"><span class="legend-color" style="background-color: #e6550d"></span> 4+ severe storm events per year</div>
+
+
+<script src = "./data/omgStorms.js"> </script>
+
+<script>
+    var map= L.map('map').setView([35.7596,-79.0193], 7);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+        //attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    var selectedYear = '2009'
+    function myStyle(feature){
+        //console.log(feature.properties['2009'])
+        return{
+            "fillColor": getColor(feature.properties[selectedYear]),
+            "color":"black",
+            "weight":"0.75",
+            "opacity":2.0,
+            "fillOpacity":0.75
+        }
+    }
+    function getColor(omgStorms){
+        return omgStorms < 1 ? "white"
+        :omgStorms < 2 ? "#fee6ce"
+        :omgStorms < 4 ? "#fdae6b"
+        :omgStorms < 11 ? "#e6550d"
+        :"white";
+   }
+
+   var storms = L.geoJSON(omgStorms,{style:myStyle}).addTo(map);
+
+   function moveSlider(value){
+   // console.log(value)
+    selectedYear = value;
+    map.removeLayer(storms)
+    storms = L.geoJSON(omgStorms, {style:myStyle}).addTo(map);
+    document.getElementById('theYear').innerHTML = 'Year: ' + value
+   }
+   moveSlider('2009')
+
+   function addLegend() {
+      var legend = document.getElementById('legend');
+      map.controls['legend'] = L.control({ position: 'bottomright' });
+      map.controls['legend'].onAdd = function(map) {
+        legend.style.display = 'block';
+        return legend;
+      };
+      map.controls['legend'].addTo(map);}
+
+</script>
+</body>
+</html>

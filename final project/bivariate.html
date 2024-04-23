@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Project</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+    
+<style>
+.map-container {
+    display: flex;
+    justify-content: space-around; /* Adjust as needed */
+    margin-top: 20px; /* Adjust as needed */
+}
+
+.map {
+    flex: 1;
+    height: 400px; /* Adjust the height as needed */
+}
+</style>
+</head>
+<body>
+    <div class="map-container">
+        <div id="mapBi" class="map"></div>
+        <div id="map1" class="map"></div>
+        <div id="map2" class="map"></div>
+    </div>
+        <h1>HElp us out!</h1>
+        <p> donation stufff etc </p>
+    <h2>Severe Storm Events & Food Insecurity in Eastern NC, 2009-2018</h2>
+    <h3 id = "theBiYear">Year</h3>
+    <input type="range" name="biYear" value="2009" min="2009" max="2018" oninput="moveSlider(this.value)">
+    <div id="mapBi"></div>
+    <div id="legendBi" class="legend">
+        <div class="legend-item"><span class="legend-color" style="background-color: grey"></span> 0 severe storm events, 1-14.1% food insecurity rate </div>
+        <div class="legend-item"><span class="legend-color" style="background-color: #eee7d9"></span> 1 severe storm events, 1-14.1% food insecurity rate </div>
+        <div class="legend-item"><span class="legend-color" style="background-color: #eed9ae"></span> 1 severe storm event, 14.2-21.1% food insecurity rate </div>
+        <div class="legend-item"><span class="legend-color" style="background-color: #f4c974"></span> 1 severe storm event, 21.2-28% food insecurity rate </div>
+        <div class="legend-item"><span class="legend-color" style="background-color: #eeaeae"></span> 2-3 severe storm events, 1-14.1% food insecurity rate</div>
+        <div class="legend-item"><span class="legend-color" style="background-color: #f49f74"></span> 2-3 severe storm events, 14.2-21.1% food insecurity rate</div>
+        <div class="legend-item"><span class="legend-color" style="background-color: #fa8f3a"></span> 2-3 severe storm events, 21.2-28% food insecurity rate </div>
+        <div class="legend-item"><span class="legend-color" style="background-color: #f47474"></span> 4+ severe storm events, 1-14.1% food insecurity rate</div>
+        <div class="legend-item"><span class="legend-color" style="background-color: #f9653a"></span> 4+ severe storm events, 14.2-21.1% food insecurity rate</div>
+        <div class="legend-item"><span class="legend-color" style="background-color: #"></span> 4+ severe storm events, 21.2-28% food insecurity rate </div>
+        <h3 id = "theYear">Year</h3>
+        <input type="range" name="year" value="2009" min="2009" max="2018" oninput="moveSlider(this.value)">
+        <div class="map-container">
+            <div>
+                <div class="map-title">Severe Storm Events</div>
+                <div id="map1" class="map"></div>
+                <div id="legend1" class="legend"> 
+                    <div class="legend-item"><span class="legend-color" style="background-color: #fee6ce"></span> 1 severe storm events per year</div>
+                    <div class="legend-item"><span class="legend-color" style="background-color: #fdae6b"></span> 2-3 severe storm events per year</div>
+                    <div class="legend-item"><span class="legend-color" style="background-color: #e6550d"></span> 4+ severe storm events per year</div>
+                </div>
+            </div>
+            <div>
+                <div class="map-title">Food Insecurity Rate</div>
+                <div id="map2" class="map"></div>
+                <div id="legend2" class="legend">
+                    <div class="legend-item"><span class="legend-color" style="background-color: #fbb4b9"></span> 1-14.1% food insecurity rate</div>
+                    <div class="legend-item"><span class="legend-color" style="background-color:#f768a1" ></span> 14.2-21.1% food insecurity rate</div>
+                    <div class="legend-item"><span class="legend-color" style="background-color: #c51b8a"></span> 21.2-28% food insecurity rate </div>
+                </div>
+            </div>
+        <h3 id="donate">Donate Now!</h3>
+        <form id="donationForm" action="/donate" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+    
+        <label for="county">County:</label>
+        <input type="text" id="county" county="county">
+        
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" min="1" required>
+        
+        <input type="submit" value="Donate">
+        </form>
+    </div>
+
+    <script src="./data/combined.js"></script>
+
+    <script>
+        //BIVARIATE MAP
+
+         var map= L.map('map').setView([35.2,-77.3664], 6);
+         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+        //attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+       
+function myStyle(feature) {
+    var valueStorms = feature.properties[stormsYear];
+    var valueFood = feature.properties[foodYear];
+
+        var stormsYear = '2009'
+        var foodYear = 'A2009'
+        
+        var color;
+
+
+if (valueStorms === 0 && valueFood > 0.01 && valueFood <= 0.141) {
+    color = 'grey';
+} 
+
+else if (valueStorms === 1 && valueFood <= 0.141) {
+    color = '#"';
+} 
+
+else if (valueStorms <= 1 && valueFood > 0.141 && valueFood <= 0.201) {
+    color = '#aeaeee';
+} 
+else if (valueStorms <= 1 && valueFood > 0.141 && valueFood > 0.201) {
+    color = '#7474f4';
+} 
+//middle row
+else if (valueStorms > 1 && valueStorms <= 4 && valueFood <= 0.141) {
+    color = '#eed9ae';
+} 
+else if (valueStorms > 1 && valueStorms <= 4 && valueFood > 0.141 && valueFood <= 0.201) {
+    color = '#b49fb4';
+} 
+else if (valueStorms > 1 && valueStorms <= 4 && valueFood > 0.201) {
+    color = '#7a65ba';
+} 
+//top row
+else if (valueStorms > 4 && valueFood <= 0.141) {
+    color = '#f4c974';
+} 
+else if (valueStorms > 4 && valueFood > 0 && valueFood <= 0.201) {
+    color = '#ba8f7a';
+} 
+else if (valueStorms > 4 && valueFood > 0.201) {
+    color = '805580';
+} 
+else {
+    color = 'white';
+}
+
+return {
+    fillColor: color,
+    weight: 1,
+    opacity: 1,
+    color: 'black',
+    fillOpacity: 0.9
+};
+}
+        // Add the GeoJSON layer to the map with custom styling
+        L.geoJSON(combined, {
+            style: myStyle
+        }).addTo(map);
+
+        var final = L.geoJSON(combined,{style:myStyle}).addTo(map);
+
+        function moveSlider(value){
+        // console.log(value)
+        stormsYear = value;
+        map.removeLayer(final)
+        final = L.geoJSON(combined, {style:myStyle}).addTo(map);
+        document.getElementById('theYear').innerHTML = 'Year: ' + value
+        }
+

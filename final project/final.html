@@ -3,51 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Project</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-crossorigin=""></script>
-
-
-<script> src="data/foodInsecurity.js"
-//I'm not sure why my src is not being called to, it because of the size of the geoJSON?</script> 
-
+    <title>Eastern NC Natural Disaster Food Relief</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+    
 <style>
-    #map {
-        width: 100%;
-        height: 500px;}
+ body {
+            font-family: Arial, sans-serif;}
+
+ .container {
+width: 80%; /* Adjust the width as needed */
+margin: 0 auto; /* This will center the container horizontally */
+text-align: center; /* This will center the content inside the container */
+}
+
+.map-container {
+    display: flex;
+    justify-content: space-around; /* Adjust as needed */
+    margin-top: 20px; /* Adjust as needed */
+}
+
+.map {
+    flex: 1;
+    height: 400px; /* Adjust the height as needed */
+}
+.legend {
+    /* Adjust legend styles as needed */
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    max-width: 200px; /* Adjust as needed */
+    margin-top: 10px; /* Adjust as needed */
+}
+.legend-item { margin-bottom: 5px; }
+.legend-color { width: 20px; height: 20px; display: inline-block; }
+
+.donation-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="email"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
 </style>
-
+</head>
 <body>
-    <h1>Food Insecurity in Eastern NC, 2009-2018</h1>
-    <h2 id = "theYear">Year</h2>
-    <input type="range" name="year" value="2009" min="2009" max="2018" oninput="moveSlider(this.value)">
-    <div id="map"></div>
+    <div class="container">
+        <!-- All your website content goes here -->
+        <img src="data/foodbank.png" alt="Food Bank Image">
+        <h1>Severe Storm Food Relief</h1>
+        <p>In Eastern North Carolina, hurricanes, tropical storms, and severe flooding are often catastrophic, recurring threats. These
+            counties face immense challenges, especially in securing food security for those affected. Donating money to the Food Bank of
+            Central & Eastern North Carolina in the wake of such calamities is not just a gesture of goodwill; it's a lifeline.</p>
+        <p>
+            The map below highlights Eastern NC counties greatly affected by severe storms and food insecurity between 2009 and 2018. Our team at the Food Bank 
+            oversees a network of food pantries across Eastern NC and can assist in facilitating donations to support them.
+        </p>
+        <p>
+            We kindly encourage you to consider supporting the counties that have shown the greatest need, and we hope that this map aids
+            you in directing your support.
+        </p>
+        <!-- Bivariate map -->
+        <h2>Severe Storm Events & Food Insecurity in Eastern NC, 2009-2018</h2>
+        <h3 id="theBiYear">Year</h3>
+        <input type="range" name="biYear" value="2009" min="2009" max="2018" oninput="moveBiSlider(this.value)">
+        <div class="map-container">
+            <div id="mapBi" class="map"></div>
+            <div id="legendBi" class="legend">
+                <!-- Legend content for bi map -->
+                <!-- <div class="legend-item"><span class="legend-color" style="background-color: white"></span> 1 severe storm event, 1-14.1% food insecurity rate </div> -->
+                <div class="legend-item"><span class="legend-color" style="background-color: #d9aeca"></span> 1 severe storm event, 14.2-21.1% food insecurity rate </div>
+                <div class="legend-item"><span class="legend-color" style="background-color: #c974ad"></span> 1 severe storm event, 21.2-28% food insecurity rate </div>
+                <div class="legend-item"><span class="legend-color" style="background-color: #aecbd9"></span> 2-3 severe storm events, 1-14.1% food insecurity rate</div>
+                <div class="legend-item"><span class="legend-color" style="background-color: #9f91bb"></span> 2-3 severe storm events, 14.2-21.1% food insecurity rate</div>
+                <div class="legend-item"><span class="legend-color" style="background-color: #8f579d"></span> 2-3 severe storm events, 21.2-28% food insecurity rate </div>
+                <div class="legend-item"><span class="legend-color" style="background-color: #74adc9"></span> 4+ severe storm events, 1-14.1% food insecurity rate</div>
+                <div class="legend-item"><span class="legend-color" style="background-color: #6573ab"></span> 4+ severe storm events, 14.2-21.1% food insecurity rate</div>
+                <div class="legend-item"><span class="legend-color" style="background-color: #55398e"></span> 4+ severe storm events, 21.2-28% food insecurity rate </div>
+            </div>
+            </div>
+        <p>Click <a href="sidebyside.html">here</a> to visit the side-by-side versions of this map.</p>
+        <!-- Donation form -->
+        <h2>Donate Now!</h2>
+        <form id="donationForm" action="/donate" method="POST">
+            <!-- Donation form fields -->
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+        
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
 
-<script>
-    var map = L.map('map').setView([35.7596,-79.0193], 7);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19
-        //attribution: '<a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+                <label for="county">County:</label>
+                <input type="text" id="county" name="county">
 
-    var food = L.geoJSON(foodInsecurity, {style: myStyle}).addTo(map);
+                
+                <label for="amount">Donation Amount:</label>
+                <select id="amount" name="amount" required>
+                    <option value="10">$10</option>
+                    <option value="20">$20</option>
+                    <option value="50">$50</option>
+                    <option value="100">$100</option>
+                    <!-- You can add more options as needed -->
+                </select>
+                <input type="submit" value="Donate">
 
-    function moveSlider(value) {
-        selectedYear = value
-        food.remove;
-        food = L.geoJSON(foodInsecurity, {style: myStyle}).addTo(map);
-        document.getElementByID('theYear').innerHTML = 'Year' + value 
-    }
-    moveSlider('2009')
+    <script src="./data/combined.js"></script>
 
-    //var selectedYear = '2009'
-    //function myStyle(feature){}
+    <script>
+        //BIVARIATE MAP
 
-</script>
+        var mapBi = L.map('mapBi').setView([35.2, -77.3664], 7);
+        mapBi.dragging.disable();
+        mapBi.scrollWheelZoom.disable();
+        mapBi.touchZoom.disable();
+        mapBi.doubleClickZoom.disable();
+        mapBi.boxZoom.disable();
+        mapBi.keyboard.disable();
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(mapBi);
+
+        var stormsYear = '2009'
+        var foodYear = 'A2009'
+
+        function myStyle(feature) {
+            // Define your styling logic here
+            var valueStorms = feature.properties[stormsYear];
+            var valueFood = feature.properties[foodYear];
+
+            var color;
+           
+        if (valueStorms === 0 && valueFood <= 0.141) {
+        color = 'white';
+        } 
+
+        else if (valueStorms === 1 && valueFood <= 0.141) {
+        color = 'white';
+        } 
+
+        else if (valueStorms === 1 && valueFood > 0.141 && valueFood <= 0.201) {
+        color = '#d9aeca';
+        } 
+        
+        else if (valueStorms === 1 && valueFood > 0.141 && valueFood > 0.201) {
+         color = '#c974ad';
+        }        
+//middle row
+        else if (valueStorms > 1 && valueStorms <= 3 && valueFood <= 0.141) {
+        color = '#aecbd9';
+        } 
+        
+        else if (valueStorms > 1 && valueStorms <= 3 && valueFood > 0.141 && valueFood <= 0.201) {
+        color = '#9f9abb';
+        } 
+
+        else if (valueStorms > 1 && valueStorms <= 3 && valueFood > 0.201) {
+        color = '#8f579d';
+        } 
+//top row
+        else if (valueStorms > 3 && valueFood <= 0.141) {
+        color = '#74adc9';
+        } 
+
+        else if (valueStorms > 3 && valueFood > 0 && valueFood <= 0.201) {
+        color = '#6573ab';
+        } 
+        
+        else if (valueStorms > 3 && valueFood > 0.201) {
+         color = '#55398e';
+        } 
+
+        else {
+         color = 'white';
+            } 
+            return {
+                fillColor: color,
+                weight: 1,
+                opacity: 1,
+                color: 'black',
+                fillOpacity: 0.9
+            };
+        }
+
+        // Add the GeoJSON layer to the map with custom styling
+        L.geoJSON(combined, {
+            style: myStyle,
+            onEachFeature: function(feature, layer) {
+                layer.on('click', function (e) {
+            // Create a text box with the county name
+            var textBox = L.control({ position: 'topright' });
+            textBox.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update(feature.properties.county);
+                return this._div;
+            };
+            textBox.update = function (countyName) {
+                this._div.innerHTML = '<h4>County Name</h4>' + (countyName ? '<b>' + countyName + '</b>' : 'Hover over a county');
+            };
+            textBox.addTo(mapBi);
+        });
+        }
+
+        }).addTo(mapBi);
+
+        var finalBi = L.geoJSON(combined,{style:myStyle}).addTo(mapBi);
+
+        function moveBiSlider(value){
+            stormsYear = value;
+            mapBi.removeLayer(finalBi)
+            finalBi = L.geoJSON(combined, {style:myStyle}).addTo(mapBi);
+            document.getElementById('theBiYear').innerHTML = 'Year: ' + value
+        }
+    </script>
 </body>
 </html>
-

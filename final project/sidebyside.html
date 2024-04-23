@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Side-by-Side</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        .map-container {
+            display: flex;
+            width: 100%;
+        }
+
+        .map {
+            flex: 1;
+            height: 200px;
+            width: 500px;
+        }
+
+        .legend {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-size: 12px;
+            line-height: 18px;
+            color: #555;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            bottom: 20px;
+            width: 200px; /* Adjust the width as needed */
+        }
+
+        .legend-item {
+            margin-bottom: 5px;
+        }
+
+        .legend-color {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin-right: 5px;
+        }
+
+        .map-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Adjust the position of legend for map1 */
+        #legend1 {
+            left: 20px;
+        }
+
+        /* Adjust the position of legend for map2 */
+        #legend2 {
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <p id="text">I was initially going to include this map on the other page below the bivariate map, but it is not pulling the correct
+        data. I'm currently still troubleshooting the problem.</p>
+    </h3>
+    <h3 id = "theYear">Year</h3>
+    <input type="range" name="year" value="2009" min="2009" max="2018" oninput="moveSlider(this.value)">
+    <div class="map-container">
+        <div>
+            <div class="map-title">Severe Storm Events</div>
+            <div id="map1" class="map"></div>
+            <div id="legend1" class="legend"> 
+                <div class="legend-item"><span class="legend-color" style="background-color: #fee6ce"></span> 1 severe storm events per year</div>
+                <div class="legend-item"><span class="legend-color" style="background-color: #fdae6b"></span> 2-3 severe storm events per year</div>
+                <div class="legend-item"><span class="legend-color" style="background-color: #e6550d"></span> 4+ severe storm events per year</div>
+            </div>
+        </div>
+        <div>
+            <div class="map-title">Food Insecurity Rate</div>
+            <div id="map2" class="map"></div>
+            <div id="legend2" class="legend">
+                <div class="legend-item"><span class="legend-color" style="background-color: #fbb4b9"></span> 1-14.1% food insecurity rate</div>
+                <div class="legend-item"><span class="legend-color" style="background-color:#f768a1" ></span> 14.2-21.1% food insecurity rate</div>
+                <div class="legend-item"><span class="legend-color" style="background-color: #c51b8a"></span> 21.2-28% food insecurity rate </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="./data/combined.js"></script>
+    <script>
+        // Function to style the GeoJSON polygons based on their "pAsian" property
+
+        var stormsSideYear ='2009'
+        var foodSideYear='A2009'
+        var final1, final2;
+
+        function style1(feature) {
+            var value = feature.properties[stormsSideYear];
+            var color;
+            if(value < 1){
+                color ='white'
+            }else if (value < 2) {
+                color = '#fee6ce';
+            } else if (value < 4) {
+                color = '#fdae6b';
+            } else {
+                color = 'white';
+            }
+            return {
+                fillColor: color,
+                weight: 2,
+                opacity: 1,
+                color: 'black',
+                fillOpacity: 0.9
+            };
+        }
+
+        // Function to style the GeoJSON polygons based on their "p_Aind" property
+
+        function style2(feature) {
+            var value = feature.properties[foodSideYear];
+            var color;
+            if(value < .1){
+                color ='white'
+            }else if (value < .141){
+                color = '#fbb4b9';
+            }else if (value < .201) {
+                color = '#f768a1';
+            } else if (value < .281) {
+                color = '#c51b8a';
+            } else {
+                color = 'white';
+            }
+         
+            return {
+                fillColor: color,
+                weight: 2,
+                opacity: 1,
+                color: 'black',
+                fillOpacity: 0.9
+            };
+        }
+
+        // Create map 1 centered at North Carolina
+        var map1 = L.map('map1').setView([35.0822, -79], 6);
+
+        // Add a tile layer for map 1
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map1);
+
+        // Add GeoJSON layer for map 1 with style1 function
+        L.geoJSON(combined, {
+            style: style1
+        }).addTo(map1);
+
+        // Create map 2 centered at North Carolina
+        var map2 = L.map('map2').setView([35.0822, -79], 6);
+
+        // Add a tile layer for map 2
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map2);
+
+        // Add GeoJSON layer for map 2 with style2 function
+        L.geoJSON(combined, {
+            style: style2
+        }).addTo(map2);
+
+        var final1 = null;
+        var final2 = null;
+
+        function moveSlider(value){
+            stormsSideYear = value;
+            foodSideYear = 'A' + value; // Set foodYear to the numeric value of the year
+        if (final1) {
+        map1.removeLayer(final1);
+        }
+        if (final2) {
+        map2.removeLayer(final2);
+         }
+        final1 = L.geoJSON(combined, { style: style1 }).addTo(map1);
+        final2 = L.geoJSON(combined, { style: style2 }).addTo(map2);
+        document.getElementById('theYear').innerHTML = 'Year: ' + value;
+        }
+    </script>
+</body>
+</html>
