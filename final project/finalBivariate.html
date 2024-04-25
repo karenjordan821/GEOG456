@@ -88,12 +88,13 @@ text-align: center;
         </p>
         <!-- Bivariate map -->
         <h2>Severe Storm Events & Food Insecurity in Eastern NC, 2009-2018</h2>
-        <h3 id="theBiYear">Year</h3>
+        <h3 id="theBiYear">Year: 2009</h3>
         <input type="range" name="biYear" value="2009" min="2009" max="2018" oninput="moveBiSlider(this.value)">
         <div class="map-container">
             <div id="mapBi" class="map"></div>
             <div id="legendBi" class="legend">
                 <!-- <div class="legend-item"><span class="legend-color" style="background-color: white"></span> 1 severe storm event, 1-14.1% food insecurity rate </div> -->
+                <div class="legend-item"><span class="legend-color" style="background-color: #dec6d5"></span> 1 severe storm event, 1-14.1% food insecurity rate </div>
                 <div class="legend-item"><span class="legend-color" style="background-color: #d9aeca"></span> 1 severe storm event, 14.2-21.1% food insecurity rate </div>
                 <div class="legend-item"><span class="legend-color" style="background-color: #c974ad"></span> 1 severe storm event, 21.2-28% food insecurity rate </div>
                 <div class="legend-item"><span class="legend-color" style="background-color: #aecbd9"></span> 2-3 severe storm events, 1-14.1% food insecurity rate</div>
@@ -104,6 +105,7 @@ text-align: center;
                 <div class="legend-item"><span class="legend-color" style="background-color: #55398e"></span> 4+ severe storm events, 21.2-28% food insecurity rate </div>
             </div>
             </div>
+        <p> DATA SOURCES: NOAA, Feeding America, NC One Map</p>
         <p>Click <a href="finalSide.html">here</a> to visit the side-by-side versions of this map.</p>
         <!-- Donation form -->
         <h2>Donate Now!</h2>
@@ -152,54 +154,71 @@ text-align: center;
             var valueFood = feature.properties[foodYear];
 
             var color;
+            var lineOpacity;
            
-        if (valueStorms === 0 && valueFood <= 0.141) {
-        color = 'white';
+        if (valueFood ===0) {
+            color='transparent';
+            lineOpacity = 0; 
+        }
+
+        else if (valueStorms === 0 && valueFood <= 0.141) {
+            color = '#dec6d5';
+            lineOpacity = 1; 
         } 
 
         else if (valueStorms === 1 && valueFood <= 0.141) {
-        color = 'white';
+        color = '#d9aeca';
+        lineOpacity = 1;
         } 
 
         else if (valueStorms === 1 && valueFood > 0.141 && valueFood <= 0.201) {
         color = '#d9aeca';
+        lineOpacity = 1;
         } 
         
         else if (valueStorms === 1 && valueFood > 0.141 && valueFood > 0.201) {
          color = '#c974ad';
+        lineOpacity = 1;
         }        
 //middle row
         else if (valueStorms > 1 && valueStorms <= 3 && valueFood <= 0.141) {
         color = '#aecbd9';
+        lineOpacity = 1;
         } 
         
         else if (valueStorms > 1 && valueStorms <= 3 && valueFood > 0.141 && valueFood <= 0.201) {
         color = '#9f9abb';
+        lineOpacity = 1;
         } 
 
         else if (valueStorms > 1 && valueStorms <= 3 && valueFood > 0.201) {
         color = '#8f579d';
+        lineOpacity = 1;
         } 
 //top row
         else if (valueStorms > 3 && valueFood <= 0.141) {
         color = '#74adc9';
+        lineOpacity = 1;
         } 
 
         else if (valueStorms > 3 && valueFood > 0 && valueFood <= 0.201) {
         color = '#6573ab';
+        lineOpacity = 1;
         } 
         
         else if (valueStorms > 3 && valueFood > 0.201) {
          color = '#55398e';
+        lineOpacity = 1;
         } 
 
         else {
          color = 'white';
+         lineOpacity = 1;
             } 
             return {
                 fillColor: color,
-                weight: 1,
-                opacity: 1,
+                weight: lineOpacity = lineOpacity,
+                opacity: lineOpacity,
                 color: 'black',
                 fillOpacity: 0.9
             };
@@ -208,31 +227,23 @@ text-align: center;
         L.geoJSON(combined, {
             style: myStyle,
             onEachFeature: function(feature, layer) {
-                layer.on('click', function (e) {
-            // not sure why below isn't working
-            var textBox = L.control({ position: 'topright' });
-            textBox.onAdd = function (map) {
-                this._div = L.DomUtil.create('div', 'info');
-                this.update(feature.properties.county);
-                return this._div;
-            };
-            textBox.update = function (countyName) {
-                this._div.innerHTML = '<h4>County Name</h4>' + (countyName ? '<b>' + countyName + '</b>' : 'Hover over a county');
-            };
-            textBox.addTo(mapBi);
-        });
+                layer.bindPopup('test');
+        }}).addTo(mapBi);
+
+        var finalBi = L.geoJSON(combined,{style:myStyle, onEachFeature:addToolTip}
+        ).addTo(mapBi);
+
+        function addToolTip (feature,layer){
+            layer.bindPopup((feature.properties['County'] ? '<b>' + feature.properties['County'] + '</b>' : 'Hover over a county'));
         }
-
-        }).addTo(mapBi);
-
-        var finalBi = L.geoJSON(combined,{style:myStyle}).addTo(mapBi);
 
         function moveBiSlider(value){
             stormsYear = value;
             mapBi.removeLayer(finalBi)
-            finalBi = L.geoJSON(combined, {style:myStyle}).addTo(mapBi);
+            finalBi = L.geoJSON(combined, {style:myStyle, onEachFeature:addToolTip}).addTo(mapBi);
             document.getElementById('theBiYear').innerHTML = 'Year: ' + value
         }
+
     </script>
 </body>
 </html>
